@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color:rgb(134, 189, 255);
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #003366;
+            text-align: center;
+        }
+
+        h3 {
+            color: #003366;
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .no-results {
+            text-align: center;
+            font-size: 18px;
+            color: #555;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body style="background: url('static/final.png') no-repeat center center fixed; background-size: cover;">
+
+
+<div class="container">
+    <h2>Search Results</h2>
+
+    {% if subjects %}
+    <h3>Subjects</h3>
+    <ul>
+      {% for subject in subjects %}
+      <li>{{ subject.name }} - {{ subject.description }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if quizzes %}
+    <h3>Quizzes</h3>
+    <ul>
+      {% for quiz in quizzes %}
+      <li>{{ quiz.title }} - Date: {{ quiz.date_of_quiz.strftime('%d/%m/%Y') }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if scores %}
+    <h3>Scores</h3>
+    <ul>
+      {% for score in scores %}
+      <li>Score: {{ score.total_score }}/{{ score.quiz.questions|length }} on {{ score.timestamp.strftime('%d/%m/%Y') }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if users %}
+    <h3>Users</h3>
+    <ul>
+      {% for user in users %}
+      <li>{{ user.username }} - {{ user.email }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if not subjects and not quizzes and not scores and not users %}
+    <p class="no-results">No results found.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

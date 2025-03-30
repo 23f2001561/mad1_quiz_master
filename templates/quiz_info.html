@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View the Quiz</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+      /* Centered Modal Styling */
+      body {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          font-family: Arial, sans-serif;
+      }
+
+      .quiz-modal {
+          background: white;
+          padding: 25px;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          text-align: center;
+          width: 350px;
+      }
+
+      .modal-title {
+          margin-bottom: 20px;
+          color: #333;
+          font-size: 20px;
+          font-weight: bold;
+      }
+
+      .form-group {
+          margin-bottom: 15px;
+          text-align: left;
+      }
+
+      label {
+          display: block;
+          font-size: 14px;
+          margin-bottom: 5px;
+          color: #555;
+      }
+
+      input {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 14px;
+          background-color: #f9f9f9;
+          cursor: not-allowed;
+      }
+
+      .button-container {
+          margin-top: 15px;
+      }
+
+      .close-btn {
+          width: 100%;
+          padding: 10px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          font-size: 16px;
+          cursor: pointer;
+      }
+
+      .close-btn:hover {
+          opacity: 0.9;
+      }
+  </style>
+</head>
+<body style="background: url('{{ url_for('static', filename='final.png') }}') no-repeat center center fixed; background-size: cover;">
+
+  <div class="quiz-modal">
+    <h2 class="modal-title">View the Quiz</h2>
+    <form>
+      <!-- ID -->
+      <div class="form-group">
+        <label for="quiz-id">ID:</label>
+        <input type="text" id="quiz-id" value="{{ quiz.id }}" readonly>
+      </div>
+
+      <!-- Subject -->
+      <div class="form-group">
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" value="{{ quiz.chapter.subject.name }}" readonly>
+      </div>
+
+      <!-- Chapter -->
+      <div class="form-group">
+        <label for="chapter">Chapter:</label>
+        <input type="text" id="chapter" value="{{ quiz.chapter.name }}" readonly>
+      </div>
+
+      <!-- Number of Questions -->
+      <div class="form-group">
+        <label for="num-questions">Number of Questions:</label>
+        <input type="text" id="num-questions" value="{{ quiz.questions|length }}" readonly>
+      </div>
+
+      <!-- Scheduled Date -->
+      <div class="form-group">
+        <label for="scheduled-date">Scheduled Date:</label>
+        <input type="text" id="scheduled-date" value="{{ quiz.date_of_quiz }}" readonly>
+      </div>
+
+      <!-- Duration -->
+      <div class="form-group">
+        <label for="duration">Duration (hh:mm):</label>
+        <input type="text" id="duration" value="{{ quiz.time_duration }}" readonly>
+      </div>
+
+      <!-- Close Button -->
+      <div class="button-container">
+        <button type="button" class="close-btn" onclick="window.history.back();">Close</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

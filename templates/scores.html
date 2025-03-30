@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Scores</title>
+  <link rel="stylesheet" href="/static/1.css">
+  <style>
+      /* General Styles */
+      
+     
+
+     
+
+      
+      /* Main Container */
+      .main-container {
+          max-width: 800px;
+          margin: 20px auto;
+          background: white;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .page-title {
+          text-align: center;
+          color: #333;
+      }
+
+      /* Table Styles */
+      .quiz-scores-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+      }
+
+      .quiz-scores-table th, .quiz-scores-table td {
+          border: 1px solid #ddd;
+          padding: 10px;
+          text-align: center;
+      }
+
+      .quiz-scores-table th {
+          background-color: #007bff;
+          color: white;
+      }
+
+      .quiz-scores-table tr:nth-child(even) {
+          background-color: #f9f9f9;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 600px) {
+          .header {
+              flex-direction: column;
+              text-align: center;
+          }
+          .nav-links {
+              margin-bottom: 10px;
+          }
+          .search-container {
+              width: 100%;
+              display: flex;
+              justify-content: center;
+              margin-top: 10px;
+          }
+      }
+  </style>
+</head>
+<body style="background: url('static/final.png') no-repeat center center fixed; background-size: cover;">
+
+
+  <!-- Header -->
+  <header class="header">
+    <nav class="nav-links">
+        <a href="{{ url_for('user_dashboard') }}">Home</a>
+        <a href="{{ url_for('scores') }}">Scores</a>
+        <a href="{{ url_for('user_summary') }}">Summary</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+    <div class="search-container">
+        <form action="{{ url_for('search') }}" method="GET">
+            <input type="text" name="query" placeholder="Search subject by date or score">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <span class="welcome">Welcome, {{ full_name }}!</span>
+
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <h2 class="page-title">Quiz Scores</h2>
+    <div class="quiz-scores-container">
+      <table class="quiz-scores-table">
+        <thead>
+          <tr>
+            <th>Quiz ID</th>
+            <th>No. of Questions</th>
+            <th>Date</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for score in scores %}
+          <tr>
+            <td>{{ score.id }}</td>
+            <td>{{ score.total_questions }}</td>
+            <td>{{ score.latest_attempt.strftime('%d/%m/%Y') if score.latest_attempt else "N/A" }}</td>
+            <td>{{ score.total_score }}/{{ score.total_questions }}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="4">No scores available.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        
+
+      </table>
+    </div>
+  </main>
+
+</body>
+</html>

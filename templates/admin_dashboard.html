@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="/static/1.css">
+</head>
+<body style="background: url('static/final.png') no-repeat center center fixed; background-size: cover;">
+
+  <header class="header">
+    <nav>
+      <a href="{{ url_for('admin_dashboard') }}">Home</a>
+      <a href="{{ url_for('admin_quiz_panel') }}">Quiz</a>
+      <a href="{{ url_for('adminsummary') }}">Summary</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+    <div class="search-container">
+      <form action="{{ url_for('search') }}" method="GET">
+        <input type="text" name="query" placeholder="Search users, subjects, quizzes..." required>
+        <button>Search</button>
+      </form>
+    </div>
+    <span class="welcome">Welcome Admin!</span>
+  </header>
+
+  <main class="main-container">
+    {% for subject in subjects %}
+    <div class="subject-container">
+      <h2>{{ subject.name }}</h2>
+
+      <table class="chapter-table">
+        <thead>
+          <tr>
+            <th>Chapter Name</th>
+            <th>No. of Quizzes</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for chapter in subject.chapters %}
+          <tr>
+            <td>{{ chapter.name }}</td>
+            <td>{{ chapter.quizzes|length if chapter.quizzes else 0 }}</td>
+            <td>
+              <div class="action-buttons">
+                <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}"><button type="submit">Edit</button></a>
+                <form action="{{ url_for('delete_chapter', chapter_id=chapter.id) }}" method="post" onsubmit="return confirm('Are you sure?');">
+                  <button >Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <br> <br>
+      <!-- Add Chapter Button -->
+      <a href="{{ url_for('add_chapter', subject_id=subject.id) }}"><button type="submit" class="add-chapter-btn">+ Chapter</button></a>
+      <br> <br>
+      <!-- Delete Subject Button (moved inside the subject container) -->
+      <form action="{{ url_for('delete_subject', subject_id=subject.id) }}" method="post" onsubmit="return confirm('Are you sure?');">
+        <button class="delete-subject-btn" >Delete Subject</button>
+      </form>
+    </div>
+    {% endfor %}
+  
+    <!-- Add Subject Button -->
+    <div class="add-subject-btn-container">
+      <a href="{{ url_for('add_subject') }}"><button type="submit" class="add-subject-btn">+ Add Subject</button></a>
+    </div>
+
+  </main>
+</body>
+</html>

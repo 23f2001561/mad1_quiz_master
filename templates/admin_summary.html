@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary Charts</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/1.css">
+    <style>
+        body {
+            background: url('static/final.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        .chart-box {
+            width: 40%;
+            max-width: 400px;
+            background: white; /* White container */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        canvas {
+            width: 100% !important;
+            height: 250px !important;
+        }
+        .chart-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <nav>
+            <a href="{{ url_for('admin_dashboard') }}">Home</a>
+            <a href="{{ url_for('admin_quiz_panel') }}">Quiz</a>
+            <a href="{{ url_for('adminsummary') }}">Summary</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+        <div class="search-container">
+            <form action="{{ url_for('search') }}" method="GET">
+                <input type="text" name="query" placeholder="Search subject by date or score">
+                <button>Search</button>
+            </form>
+        </div>
+        <span class="welcome">Welcome Admin!</span>
+    </header>
+
+    <h2 style="text-align: center;">📊 Summary Charts</h2>
+
+    <div class="chart-container">
+        <div class="chart-box">
+            <div class="chart-title">🏆 Subject Wise Top Scores</div>
+            <canvas id="scoreChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <div class="chart-title">📈 Subject Wise User Attempts</div>
+            <canvas id="attemptChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        var ctx1 = document.getElementById('scoreChart').getContext('2d');
+        var scoreChart = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: {{ subjects | tojson }},
+                datasets: [{
+                    label: 'Top Scores',
+                    data: {{ top_scores | tojson }},
+                    backgroundColor: ['blue', 'green', 'pink', 'orange', 'purple'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        var ctx2 = document.getElementById('attemptChart').getContext('2d');
+        var attemptChart = new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: {{ subjects | tojson }},
+                datasets: [{
+                    label: 'User Attempts',
+                    data: {{ user_attempts | tojson }},
+                    backgroundColor: ['red', 'blue', 'yellow', 'green', 'cyan'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
+</body>
+</html>

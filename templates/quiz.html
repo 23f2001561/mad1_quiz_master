@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Quiz Panel</title>
+  <link rel="stylesheet" href="/static/1.css">
+</head>
+<body style="background: url('static/final.png') no-repeat center center fixed; background-size: cover;">
+  <!-- Header Section -->
+  <header class="header">
+    <nav>
+        <a href="{{ url_for('admin_dashboard') }}">Home</a>
+        <a href="{{ url_for('admin_quiz_panel') }}">Quiz</a>
+        <a href="{{ url_for('adminsummary') }}">Summary</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+    <div class="search-container">
+        <form action="{{ url_for('search') }}" method="GET">
+          <input type="text" name="query" placeholder="Search users, subjects, quizzes..." required>
+          <button>Search</button>
+        </form>
+      </div>
+      <span class="welcome">Welcome Admin!</span>
+
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <main class="main-container">
+        {% for quiz in quizzes %}
+        <div class="quiz-container">
+            <h3>
+                <a href="{{ url_for('quiz_info', quiz_id=quiz.id) }}">
+                  Quiz {{ loop.index }} ({{ quiz.chapter.subject.name if quiz.chapter else 'No Chapter' }})
+
+                </a>
+              </h3>
+              
+          <table class="quiz-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Q_Title</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for question in quiz.questions %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ question.question_statement }}</td>
+                <td>
+                    <div class="action-buttons">
+                  <form action="{{ url_for('edit_question', question_id=question.id) }}" method="GET">
+                    <button type="submit">Edit</button>
+                  </form>
+                  <form action="{{ url_for('delete_question', question_id=question.id) }}" method="POST">
+                    <button  onclick="return confirm('Are you sure?')">Delete</button>
+                  </form>
+                </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <a href="{{ url_for('add_question', quiz_id=quiz.id) }}">
+            <button class="add-question-btn">+ Question</button>
+          </a>
+        </div>
+        {% endfor %}
+      
+        <!-- Add New Quiz Button -->
+        <div class="add-quiz-btn-container">
+            <a href="{{ url_for('add_quiz') }}">
+                <button class="add-quiz-btn" type="button">+ New Quiz</button>
+            </a>
+        </div>
+        
+        
+
+
+  </main>
+
+
+</body>
+</html>
+

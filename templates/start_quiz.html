@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Start the Quiz</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          background-color:rgb(79, 214, 255);
+          margin: 0;
+          padding: 0;
+      }
+
+      .quiz-container {
+          max-width: 600px;
+          margin: 30px auto;
+          background: white;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .quiz-title {
+          text-align: center;
+          color: #333;
+          margin-bottom: 10px;
+      }
+
+      .quiz-header {
+          display: flex;
+          justify-content: space-between;
+          padding: 10px;
+          background-color: #007bff;
+          color: white;
+          border-radius: 4px;
+      }
+
+      .question-statement {
+          margin-top: 15px;
+          font-size: 18px;
+          font-weight: bold;
+          color: #333;
+      }
+
+      .options-container label {
+          display: block;
+          margin: 8px 0;
+          font-size: 16px;
+      }
+
+      .button-container {
+          margin-top: 15px;
+          text-align: right;
+      }
+
+      .save-next-btn, .submit-btn {
+          padding: 8px 12px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+      }
+
+      .submit-btn {
+          background-color: #28a745;
+      }
+
+      .save-next-btn:hover, .submit-btn:hover {
+          opacity: 0.8;
+      }
+
+      @media (max-width: 600px) {
+          .quiz-container {
+              width: 90%;
+              padding: 15px;
+          }
+      }
+  </style>
+</head>
+<body style="background: url('{{ url_for('static', filename='final.png') }}') no-repeat center center fixed; background-size: cover;">
+
+  <div class="quiz-container">
+    <!-- Quiz Title -->
+    <h2 class="quiz-title">{{ quizzes.title }}</h2>
+
+    <!-- Quiz Header -->
+    <div class="quiz-header">
+      <div>Q.No. <span class="current-question">{{ question_number}}</span> / <span class="total-questions">{{ total_questions }}</span></div>
+      <div>Time Left: <span id="time">{{ quizzes.time_duration }}</span></div>
+    </div>
+
+    {% if question %}
+      <div class="question-statement">{{ question.question_statement }}</div>
+      <div class="options-container">
+        <form method="POST" action="{{ url_for('save_answer', quiz_id=quizzes.id, question_id=question.id, question_number=question_number) }}">
+
+          <label><input type="radio" name="option" value="1" required> {{ question.option1 }}</label>
+          <label><input type="radio" name="option" value="2"> {{ question.option2 }}</label>
+          <label><input type="radio" name="option" value="3"> {{ question.option3 }}</label>
+          <label><input type="radio" name="option" value="4"> {{ question.option4 }}</label>
+
+          <div class="button-container">
+            {% if question_number < total_questions %}
+            <form method="POST" action="{{ url_for('save_answer', quiz_id=quizzes.id, question_id=question.id, question_number=question_number) }}">
+
+                <button type="submit" class="save-next-btn">Save and Next</button>
+            </form>
+            
+                
+            {% else %}
+            <form action="{{ url_for('submit_quiz', quiz_id=quizzes.id) }}" method="POST">
+                <button type="submit" onclick="this.disabled=true; this.form.submit();">Submit</button>
+
+            </form>
+            
+            {% endif %}
+        </div>
+        
+        </form>
+      </div>
+    {% else %}
+      <p>No questions available for this quiz.</p>
+    {% endif %}
+  </div>
+
+  <!-- JavaScript for Timer -->
+  <script>
+    function startTimer(duration) {
+        let timer = duration;
+        let interval = setInterval(function () {
+            let minutes = Math.floor(timer / 60);
+            let seconds = timer % 60;
+    
+            document.getElementById('time').textContent =
+                (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+    
+            if (--timer < 0) {
+                clearInterval(interval);
+                alert("Time is up! Submitting quiz...");
+                document.querySelector(".submit-btn").click();
+            }
+        }, 1000);
+    }
+    
+
+    // Extract HH:MM part from quizzes.time_duration
+    let durationString = "{{ quizzes.time_duration }}";  
+    let timeParts = durationString.split(":").map(Number);  
+    let durationInSeconds = (timeParts[0] || 0) * 3600 + (timeParts[1] || 0) * 60;  
+    startTimer(durationInSeconds);
+
+  </script>
+
+</body>
+</html>

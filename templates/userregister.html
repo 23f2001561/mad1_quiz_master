@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color:rgb(139, 213, 255);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        p {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin: 5px 0 2px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007BFF;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        a {
+            display: block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body style="background: url('static/final.png') no-repeat center center fixed; background-size: cover;">
+
+
+    <form method="post">
+        <p>Register</p>
+
+        <label for="username">Email</label>
+        <input id="username" name="username" type="email" placeholder="Enter your email" required/>
+
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" placeholder="Enter password" required/>
+
+        <label for="full_name">Full Name</label>
+        <input id="full_name" name="full_name" placeholder="Enter full name" required/>            
+
+        <label for="qualification">Qualification</label>
+        <input id="qualification" name="qualification" placeholder="10th/12th/BTech/MTech"/>
+
+        <label for="dob">Date of Birth</label>
+        <input id="dob" type="date" name="dob" required/>
+
+        <button type="submit">Register</button>
+        <a href="{{ url_for('index') }}">Back to sign in</a>
+
+        {% if again %}
+            <p class="error-message">User already exists</p>
+        {% endif %}
+    </form>
+
+</body>
+</html>
